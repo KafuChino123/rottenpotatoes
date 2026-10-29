@@ -14,9 +14,6 @@ gem "puma", ">= 5.0"
 # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
 gem "importmap-rails"
 
-# Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem "tzinfo-data", platforms: %i[windows jruby]
-
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false
 
@@ -71,3 +68,10 @@ gem "minitest", "~> 5.0", group: :test
 
 gem "stimulus-rails", "~> 1.3"
 gem "turbo-rails", "~> 2.0"
+
+# Supply timezone data even when a Linux grading image has no system zoneinfo.
+gem "tzinfo-data", "~> 1.2026"
+
+gem "mechanize", "~> 2.10", groups: %i[development test]
+
+gem "simplecov", "~> 1.3", groups: %i[development test]

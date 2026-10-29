@@ -34,7 +34,7 @@ language of translated metadata. Ratings default to `R` for imported movies.
 Run inside the container:
 
 ```sh
-bundle exec rspec
+bundle exec rspec --require spec_helper
 bundle exec rails test
 bundle exec cucumber --strict
 bundle exec rubocop Gemfile Guardfile app/controllers/movies_controller.rb app/models/movie.rb config/routes.rb spec features/step_definitions/movie_steps.rb features/support/database.rb
@@ -42,8 +42,9 @@ bundle exec rubocop Gemfile Guardfile app/controllers/movies_controller.rb app/m
 
 RSpec covers controller collaboration, API errors, query encoding, language and
 duplicate filtering, and the full search/import flow. WebMock blocks real HTTP
-requests during specs. Both acceptance-test suites clear the test database before
-starting so Rails fixtures cannot leak between test commands.
+requests during specs. The standard `spec_helper` entry point is supported,
+and `tzinfo-data` supplies timezone data on Linux grading images. Both acceptance-test
+suites clear the test database before starting so Rails fixtures cannot leak between test commands.
 
 Use `bundle exec guard` to rerun specs on changes, or use `bundle exec rubocop -a`
 with the paths above to format Ruby changes. JSON stays on 2.x and Minitest on 5.x
