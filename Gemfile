@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 source "https://rubygems.org"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
@@ -13,7 +15,7 @@ gem "puma", ">= 5.0"
 gem "importmap-rails"
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem "tzinfo-data", platforms: %i[ windows jruby ]
+gem "tzinfo-data", platforms: %i[windows jruby]
 
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false
@@ -22,11 +24,11 @@ gem "bootsnap", require: false
 # gem "image_processing", "~> 1.2"
 
 group :development, :test do
+  gem "cucumber-rails", require: false
+  gem "database_cleaner-active_record"
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
-  gem "debug", platforms: %i[ mri windows ]
-  gem 'database_cleaner-active_record'
-  gem 'cucumber-rails', require: false
-  gem 'rspec-rails'
+  gem "debug", platforms: %i[mri windows]
+  gem "rspec-rails"
   gem "sqlite3", ">= 1.4"
 end
 
@@ -53,3 +55,8 @@ end
 group :production do
   gem "pg", "~> 1.6"
 end
+
+gem "rubocop", "~> 1.92", group: :development, require: false
+
+# Rails 7.1 passes quirks_mode to JSON.generate, which JSON 3 no longer accepts.
+gem "json", "~> 2.0"

@@ -37,6 +37,27 @@ bundle exec rails db:setup # shorthand for db:create, db:migrate, db:seed
 bundle exec rails server -b 0.0.0.0 -p 3000
 ```
 
+## Run the acceptance tests
+
+Inside the configured Docker container:
+
+```sh
+bundle exec cucumber --strict
+bundle exec rubocop Gemfile features/step_definitions/movie_steps.rb
+```
+
+All four scenarios must pass with no pending or undefined steps. The scenarios cover
+rating selection, restoring all movies, and switching between title and release-date sorting.
+Movie assertions use the movie cards inside `#movies`, matching the current view.
+The JSON dependency stays on 2.x because Rails 7.1 uses the `quirks_mode` option
+removed in JSON 3.
+
+To format the dependency declarations and assignment's Ruby steps:
+
+```sh
+bundle exec rubocop -a Gemfile features/step_definitions/movie_steps.rb
+```
+
 ## Parts
 - [Part 1 - BDD Introduction](Part-1.md)
 - [Part 2 - Filtering Movies](Part-2.md)
