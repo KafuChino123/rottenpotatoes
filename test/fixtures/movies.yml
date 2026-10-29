@@ -1,0 +1,11 @@
+one:
+  title: Manhunter
+  rating: R
+  description: An investigator tracks a serial killer.
+  release_date: 1986-08-14
+
+two:
+  title: Aladdin
+  rating: G
+  description: An animated adventure.
+  release_date: 1992-11-25

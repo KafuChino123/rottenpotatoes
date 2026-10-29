@@ -4,3 +4,7 @@ AllCops:
 
 Style/StringLiterals:
   EnforcedStyle: double_quotes
+
+# RSpec groups collect independent examples; their total size is not a method complexity measure.
+Metrics/BlockLength:
+  AllowedMethods: [describe, context]

@@ -60,3 +60,14 @@ gem "rubocop", "~> 1.92", group: :development, require: false
 
 # Rails 7.1 passes quirks_mode to JSON.generate, which JSON 3 no longer accepts.
 gem "json", "~> 2.0"
+
+gem "faraday", "~> 2.15"
+
+gem "guard-rspec", "~> 4.7", group: :test
+gem "rails-controller-testing", "~> 1.0", group: :test
+gem "webmock", "~> 3.34", group: :test
+
+gem "minitest", "~> 5.0", group: :test
+
+gem "stimulus-rails", "~> 1.3"
+gem "turbo-rails", "~> 2.0"

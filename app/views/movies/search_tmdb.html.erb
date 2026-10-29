@@ -1,0 +1,63 @@
+<main class="tmdb-search">
+  <h1>Search in TMDb</h1>
+  <p>Find a movie and add it to RottenPotatoes.</p>
+
+  <% flash.each do |key, message| %>
+    <div class="alert alert-<%= key %>" role="alert"><%= message %></div>
+  <% end %>
+
+  <%= form_tag search_tmdb_path, method: :get, id: "tmdb_form" do %>
+    <div class="search-fields">
+      <div>
+        <%= label_tag :movie_title_field, "Movie Name" %>
+        <%= text_field_tag :title, params[:title], id: "movie_title_field", placeholder: "Manhunter", "aria-required": true %>
+      </div>
+      <div>
+        <%= label_tag :movie_year_field, "Release Year" %>
+        <%= text_field_tag :release_year, params[:release_year], id: "movie_year_field", placeholder: "1986 (optional)" %>
+      </div>
+    </div>
+    <fieldset>
+      <legend>Original language</legend>
+      <%= radio_button_tag :language, "en", params[:language] == "en" %>
+      <%= label_tag :language_en, "English Only" %>
+      <%= radio_button_tag :language, "all", params[:language] != "en" %>
+      <%= label_tag :language_all, "All Languages" %>
+    </fieldset>
+    <%= submit_tag "Search", id: "tmdb_submit" %>
+  <% end %>
+
+  <% if @movies.present? %>
+    <h2>Search results</h2>
+    <div class="search-results">
+      <table id="search_movies">
+        <thead>
+          <tr><th>Title</th><th>Rating</th><th>Release date</th><th>Overview</th><th>Add movie</th></tr>
+        </thead>
+        <tbody>
+          <% @movies.each do |movie| %>
+            <tr>
+              <td><%= movie.title %></td>
+              <td><%= movie.rating %></td>
+              <td><%= movie.release_date&.to_date || "Not available" %></td>
+              <td><%= movie.description %></td>
+              <td>
+                <%= form_tag add_movie_path, method: :post do %>
+                  <% %i[title rating description release_date].each do |attribute| %>
+                    <%= hidden_field_tag "movie[#{attribute}]", movie.public_send(attribute) %>
+                  <% end %>
+                  <%= submit_tag "Add movie" %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+
+  <p><%= link_to "Back to movies", movies_path %></p>
+  <footer>
+    <p>This product uses the <%= link_to "TMDB API", "https://www.themoviedb.org/" %> but is not endorsed or certified by TMDB.</p>
+  </footer>
+</main>

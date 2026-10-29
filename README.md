@@ -1,64 +1,64 @@
-# CHIP 7.7: Behavior Driven Development with Cucumber
+# RottenPotatoes
 
-## Introduction
-In this assignment, you will create user stories to describe a feature of a SaaS app, use the 
-[Cucumber][cuke] tool to turn those stories into executable acceptance tests, and run the tests against your SaaS app.
+Movie browsing with remembered rating filters and sorting (CHIP 7.7), plus TMDb
+search and import driven by RSpec tests (CHIP 8.5).
 
-[cuke]: https://cucumber.io/docs/guides/10-minute-tutorial/
+## Run
 
-Specifically, you will write Cucumber scenarios that test the happy paths of parts 1-3 of the 
-[Rails Intro assignment](https://github.com/NYU-CSE-Software-Engineering/hw-rails-intro), in which you added 
-filtering and sorting to RottenPotatoes' `index` view for Movies. (Remember, the _happy paths_ are the steps users 
-take when they successfully use an application.)
-
-The app code in `rottenpotatoes` contains a "canonical" solution to the Rails Intro assignment against which to write 
-your scenarios, and the necessary scaffolding for the first couple of scenarios.
-
-## Get the assignment code
-
-As in previous CHIPS, you will need to authenticate `git` with GitHub to copy our template repo for this assignment
-to your personal GitHub account. Once copied, clone your repo to your local machine in order to complete this 
-assignment.
-
-> [!NOTE]
-> Your directory must be named `rottenpotatoes`.
-
-## Set Up Your Working Environment
-
-Now that you've got the code, you should confirm that you can get RottenPotatoes up and running as we have 
-delivered it. These are the same set of steps we take on most new Rails applications.
+Requires Docker. Copy `.env.example` to `.env` and set your own `TMDB_API_KEY`.
+The key is optional for automated tests; real searches require it.
 
 ```sh
-cd rottenpotatoes
-docker build -t rottenpotatoes:latest .
-docker run -it -v "$(pwd):/app" -p 3000:3000 rottenpotatoes
-# Inside the running container, run:bundle install
-bundle exec rails db:setup # shorthand for db:create, db:migrate, db:seed
-bundle exec rails server -b 0.0.0.0 -p 3000
+docker build -t rottenpotatoes .
+docker run --rm -it -v "$PWD:/app" -p 3000:3000 --env-file .env rottenpotatoes
 ```
 
-## Run the acceptance tests
-
-Inside the configured Docker container:
+Inside the container:
 
 ```sh
+bundle install
+bundle exec rails db:prepare
+bundle exec rails db:seed
+bundle exec rails server -b 0.0.0.0
+```
+
+Open `http://localhost:3000`, follow **Search TMDb**, enter a title, optionally
+enter a release year, and choose **All Languages** or **English Only**. Search
+results remain unsaved until **Add movie** is clicked. Existing movies are
+matched by title and release date; different releases with the same title remain
+available. English filtering uses TMDb's `original_language`, rather than the
+language of translated metadata. Ratings default to `R` for imported movies.
+
+## Verify
+
+Run inside the container:
+
+```sh
+bundle exec rspec
+bundle exec rails test
 bundle exec cucumber --strict
-bundle exec rubocop Gemfile features/step_definitions/movie_steps.rb
+bundle exec rubocop Gemfile Guardfile app/controllers/movies_controller.rb app/models/movie.rb config/routes.rb spec features/step_definitions/movie_steps.rb features/support/database.rb
 ```
 
-All four scenarios must pass with no pending or undefined steps. The scenarios cover
-rating selection, restoring all movies, and switching between title and release-date sorting.
-Movie assertions use the movie cards inside `#movies`, matching the current view.
-The JSON dependency stays on 2.x because Rails 7.1 uses the `quirks_mode` option
-removed in JSON 3.
+RSpec covers controller collaboration, API errors, query encoding, language and
+duplicate filtering, and the full search/import flow. WebMock blocks real HTTP
+requests during specs. Both acceptance-test suites clear the test database before
+starting so Rails fixtures cannot leak between test commands.
 
-To format the dependency declarations and assignment's Ruby steps:
+Use `bundle exec guard` to rerun specs on changes, or use `bundle exec rubocop -a`
+with the paths above to format Ruby changes. JSON stays on 2.x and Minitest on 5.x
+for Rails 7.1 compatibility.
 
-```sh
-bundle exec rubocop -a Gemfile features/step_definitions/movie_steps.rb
-```
+## Deploy and submit
 
-## Parts
-- [Part 1 - BDD Introduction](Part-1.md)
-- [Part 2 - Filtering Movies](Part-2.md)
-- [Part 3 - Sorting Movies](Part-3.md)
+The `Procfile` runs migrations during release and starts Puma. Configure
+`DATABASE_URL` for PostgreSQL, `SECRET_KEY_BASE`, and `TMDB_API_KEY` on the host.
+Never commit `.env` or a real API key. Seed the deployed database with
+`bundle exec rails db:seed`, then verify search and import on the live app.
+
+After deployment, create `rottenpotatoes-url.txt` at the repository root containing
+only the verified HTTPS application URL, commit it, and submit the relevant branch
+to Gradescope. Its autograder adds movies to the deployed database, which can
+affect subsequent submissions.
+
+Assignment: [CHIP 8.5](https://github.com/NYU-CSE-Software-Engineering/hw-rspec-rails-intro).

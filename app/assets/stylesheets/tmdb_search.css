@@ -1,0 +1,71 @@
+.tmdb-search {
+  max-width: 72rem;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  font-family: system-ui, sans-serif;
+  line-height: 1.5;
+}
+
+.tmdb-search .search-fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.tmdb-search .search-fields label {
+  display: block;
+  font-weight: 600;
+}
+
+.tmdb-search input[type="text"] {
+  padding: 0.5rem;
+}
+
+.tmdb-search fieldset {
+  margin: 1rem 0;
+}
+
+.tmdb-search input[type="submit"] {
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+}
+
+.tmdb-search .alert {
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 0.25rem;
+}
+
+.tmdb-search .alert-danger {
+  background: #fde9e7;
+  color: #8b1d16;
+}
+
+.tmdb-search .alert-success {
+  background: #e3f3e7;
+  color: #1b5731;
+}
+
+.tmdb-search .search-results {
+  overflow-x: auto;
+}
+
+.tmdb-search table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tmdb-search th,
+.tmdb-search td {
+  padding: 0.75rem;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid #d8dce0;
+}
+
+.tmdb-search footer {
+  margin-top: 2rem;
+  color: #535a63;
+  font-size: 0.85rem;
+}
