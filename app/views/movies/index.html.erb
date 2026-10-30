@@ -1,36 +1,50 @@
 <p style="color: green"><%= notice %></p>
 
-<%= form_tag movies_path, method: :get, id: 'ratings_form', local: true do %>
+<%= form_tag movies_path, method: :get, id: "ratings_form", local: true do %>
   Include:
   <% @all_ratings.each do |rating| %>
-    <div class="form-check  form-check-inline">
-      <%= check_box_tag "ratings[#{rating}]", "1", @ratings_to_show.include?(rating), class: 'form-check-input' %>
-      <%= label_tag "ratings[#{rating}]", rating, class: 'form-check-label' %>
+    <div class="form-check form-check-inline">
+      <%= check_box_tag "ratings[#{rating}]", "1", @ratings_to_show.include?(rating), class: "form-check-input" %>
+      <%= label_tag "ratings[#{rating}]", rating, class: "form-check-label" %>
     </div>
   <% end %>
-  <div class="form-check  form-check-inline">
-    <label class="form-label me-2" for="sort_by">Sort by:</label>
+  <div class="form-check form-check-inline">
+    <%= label_tag :sort_by, "Sort by:", class: "form-label me-2" %>
     <%= select_tag :sort_by,
-                   options_for_select([["Title", "title"],
-                                       ["Release date", "release_date"]],
-                                       @sort_by),
-                   id:    "sort_by",
-                   class: "form-select d-inline w-auto" %>
+                   options_for_select([["Title", "title"], ["Release date", "release_date"]], @sort_by),
+                   id: "sort_by", class: "form-select d-inline w-auto" %>
   </div>
-  <%= submit_tag 'Refresh', id: 'ratings_submit', class: 'btn btn-primary' %>
-  
+  <%= submit_tag "Refresh", id: "ratings_submit", class: "btn btn-primary" %>
 <% end %>
 
 <h1>Movies</h1>
 
-<div id="movies">
-  <% @movies.each do |movie| %>
-    <%= render movie %>
-    <p>
-      <%= link_to "Show this movie", movie %>
-    </p>
-  <% end %>
-</div>
+<table class="table table-striped" id="movies">
+  <thead>
+    <tr>
+      <th>
+        <%= link_to "Movie Title", movies_path(sort_by: "title", ratings: @ratings_to_show_hash),
+                    id: "title_header", class: ("hilite" if @sort_by == "title") %>
+      </th>
+      <th>Rating</th>
+      <th>
+        <%= link_to "Release Date", movies_path(sort_by: "release_date", ratings: @ratings_to_show_hash),
+                    id: "release_date_header", class: ("hilite" if @sort_by == "release_date") %>
+      </th>
+      <th>More Info</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @movies.each do |movie| %>
+      <tr id="<%= dom_id(movie) %>">
+        <td><%= movie.title %></td>
+        <td><%= movie.rating %></td>
+        <td><%= movie.release_date&.to_date %></td>
+        <td><%= link_to "More about #{movie.title}", movie_path(movie) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
 
 <%= link_to "New movie", new_movie_path %>
 <p><%= link_to "Search TMDb", search_tmdb_path %></p>

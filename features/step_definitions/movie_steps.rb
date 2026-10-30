@@ -11,8 +11,8 @@ Then(/^(\d+) seed movies should exist$/) do |n_seeds|
 end
 
 Then(/^I should see "([^"]*)" before "([^"]*)" in the movie list$/) do |first_movie, second_movie|
-  titles = all("#movies > div[id^='movie_'] > p:first-child").map do |title|
-    title.text.delete_prefix("Title:").strip
+  titles = all("#movies tbody tr > td:first-child").map do |title|
+    title.text.strip
   end
 
   expect(titles).to include(first_movie, second_movie)
@@ -36,7 +36,7 @@ Then(/^I should (not )?see the following movies: (.*)$/) do |negated, movie_list
 end
 
 Then(/^I should see all the movies$/) do
-  movie_ids = all("#movies > div[id^='movie_']").map { |movie| movie[:id] }
+  movie_ids = all("#movies tbody tr[id^='movie_']").map { |movie| movie[:id] }
   expect(movie_ids).to match_array(Movie.ids.map { |id| "movie_#{id}" })
 end
 

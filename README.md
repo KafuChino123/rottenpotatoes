@@ -26,7 +26,8 @@ Open `http://localhost:3000`, follow **Search TMDb**, enter a title, optionally
 enter a release year, and choose **All Languages** or **English Only**. Search
 results remain unsaved until **Add movie** is clicked. Existing movies are
 matched by title and release date; different releases with the same title remain
-available. English filtering uses TMDb's `original_language`, rather than the
+available. Imported movies appear in the Movies table on the home page.
+English filtering uses TMDb's `original_language`, rather than the
 language of translated metadata. Ratings default to `R` for imported movies.
 
 ## Verify

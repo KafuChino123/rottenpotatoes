@@ -46,6 +46,28 @@ RSpec.describe "Searching and adding TMDb movies", type: :feature do
     expect(page).to have_css("#search_movies tbody tr", text: "2015-06-01")
   end
 
+  %i[first last].each do |position|
+    it "adds the #{position} result and displays its values in the home page movie table" do
+      expected = JSON.parse(body).fetch("results").public_send(position)
+      visit search_tmdb_path(title: "Manhunter", language: "all")
+      result_row = all("#search_movies tbody tr").public_send(position)
+
+      expect do
+        within(result_row) { click_button "Add movie" }
+      end.to change(Movie, :count).by(1)
+      expect(Movie.last).to have_attributes(
+        title: expected.fetch("title"), rating: "R", description: expected.fetch("overview")
+      )
+      expect(Movie.last.release_date.to_date.to_s).to eq(expected.fetch("release_date"))
+
+      click_link "Back to movies"
+      row = find("table#movies tbody tr")
+      expect(row.all("td").map(&:text).first(3)).to eq(
+        [expected.fetch("title"), "R", expected.fetch("release_date")]
+      )
+    end
+  end
+
   it "shows only English-language movies when English Only is selected" do
     visit search_tmdb_path
     fill_in "Movie Name", with: "Manhunter"

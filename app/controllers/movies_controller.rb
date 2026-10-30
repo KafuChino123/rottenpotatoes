@@ -7,6 +7,7 @@ class MoviesController < ApplicationController
   def index
     @all_ratings = Movie.all_ratings
     @ratings_to_show = selected_ratings
+    @ratings_to_show_hash = @ratings_to_show.index_with { "1" }
     @sort_by = params[:sort_by].presence_in(%w[title release_date]) || session[:sort_by] || "title"
     session[:ratings] = @ratings_to_show
     session[:sort_by] = @sort_by
